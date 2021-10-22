@@ -10,7 +10,8 @@ export default function Buzzer({ color = 'green' }) {
 
   function vibe() {
     setHolding(true)
-    timeout.current = setTimeout(() => setVoted(true), voteDelay)
+    if (timeout.current) clearTimeout(timeout.current)
+    timeout.current = setTimeout(vote, voteDelay)
     window.navigator.vibrate(vibePattern)
   }
 
@@ -20,10 +21,28 @@ export default function Buzzer({ color = 'green' }) {
     if (timeout.current) clearTimeout(timeout.current)
   }
 
+  function vote() {
+    const csrfToken = document.querySelector('meta[name=csrf-token]')?.content
+    axios.defaults.headers.common['X-CSRF-Token'] = csrfToken
+
+    if (color === 'green') {
+      axios.post('/vote_green')
+    } else if (color === 'red') {
+      axios.post('/vote_red')
+    }
+  }
+
   if (!clicked) return <button onClick={() => setClicked(true)}>Click to start Squid</button>
 
+  const eventHandlers = {
+    onMouseDown: vibe,
+    onTouchStart: vibe,
+    onMouseUp: stopVibe,
+    onTouchEnd: stopVibe
+  }
+
   return <div>
-    <div className={`${color} dim`} onTouchStart={vibe} onTouchEnd={stopVibe} />
-    <div className={`${color} bright ${holding ? 'visible' : ''}`} onTouchStart={vibe} onTouchEnd={stopVibe} />
+    <div className={`${color} dim`} {...eventHandlers} />
+    <div className={`${color} bright ${holding ? 'visible' : ''}`} {...eventHandlers} />
   </div>
 }
