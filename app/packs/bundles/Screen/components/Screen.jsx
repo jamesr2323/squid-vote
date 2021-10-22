@@ -46,6 +46,12 @@ export default function Screen() {
     }, 300)
   }, [])
 
+  function reset() {
+    const csrfToken = document.querySelector('meta[name=csrf-token]')?.content
+    axios.defaults.headers.common['X-CSRF-Token'] = csrfToken
+    axios.post('/reset')
+  }
+
   return <div>
     <div className='top'>
       <div className='left'>
@@ -54,7 +60,7 @@ export default function Screen() {
         </div>
       </div>
       <div className='middle'>
-        <div className='number'>
+        <div className='number' onClick={reset}>
           <GridBox color='#888' pattern={colonPattern} />
         </div>
       </div>
