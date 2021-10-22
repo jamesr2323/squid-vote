@@ -1,0 +1,30 @@
+.dim {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background: url(/img/green-dim.png) no-repeat center center fixed;
+  background-size: cover;
+
+  &.red {
+    background-image: url(/img/red-dim.png);
+  }
+}
+
+.bright {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background: url(/img/green-bright.png) no-repeat center center fixed;
+  background-size: cover;
+  opacity: 0;
+  transition: opacity 1.5s;
+
+  &.visible {
+    opacity: 1;
+    transition-delay: .5s;
+  }
+
+  &.red {
+    background-image: url(/img/red-bright.png);
+  }
+}
